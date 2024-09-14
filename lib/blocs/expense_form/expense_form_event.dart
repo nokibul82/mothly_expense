@@ -31,12 +31,12 @@ final class ExpenseDateChanged extends ExpenseFormEvent{
   List<Object> get props => [date];
 }
 
-final class ExpenseTypeChanged extends ExpenseFormEvent{
-  const ExpenseTypeChanged(this.type);
-  final String type;
+final class ExpenseCategoryChanged extends ExpenseFormEvent{
+  const ExpenseCategoryChanged(this.category);
+  final Category category;
 
   @override
-  List<Object> get props => [type];
+  List<Object> get props => [category];
 }
 
 final class ExpenseSubmitted extends ExpenseFormEvent {

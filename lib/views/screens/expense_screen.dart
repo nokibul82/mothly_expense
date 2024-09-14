@@ -1,9 +1,4 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mothly_expense/core/app_color.dart';
 import '../../core/app_data.dart';
 
@@ -24,13 +19,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           return ListTile(
             leading: Column(
               children: [
-                Text(AppData.expenseList[index].dateTime.day.toString()),
-                Text(AppData.expenseList[index].dateTime.month.toString()),
-                Text(AppData.expenseList[index].dateTime.year.toString())
+                Text(AppData.expenseList[index].date.day.toString()),
+                Text(AppData.expenseList[index].date.month.toString()),
+                Text(AppData.expenseList[index].date.year.toString())
               ],
             ),
             title: Text(AppData.expenseList[index].title ?? ""),
-            subtitle: Text(AppData.expenseList[index].type ?? ""),
+            subtitle: Text(AppData.expenseList[index].category.toString() ?? ""),
             trailing: Text(
                 (AppData.expenseList[index].amount ?? 0.0).toStringAsFixed(2)),
           );

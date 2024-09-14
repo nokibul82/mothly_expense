@@ -1,20 +1,29 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mothly_expense/models/expense_model.dart';
 import 'package:uuid/uuid.dart';
-import '../../repositories/expense_repository.dart';
 
+import '../../models/expense_model.dart';
+import '../../models/category_model.dart';
+import '../../repositories/expense_repository.dart';
 part 'expense_form_event.dart';
 part 'expense_form_state.dart';
 
 class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
-  ExpenseFormBloc({required ExpenseRepository repository})
+  ExpenseFormBloc(
+      {required ExpenseRepository repository, ExpenseModel? initalExpense})
       : _repository = repository,
-        super(ExpenseFormState(dateTime: DateTime.now())) {
+        super(ExpenseFormState(
+          dateTime: DateTime.now(),
+          initialExpense: initalExpense,
+          title: initalExpense?.title,
+          amount: initalExpense?.amount,
+          category: initalExpense?.category ?? Category.other,
+        )) {
     on<ExpenseTitleChanged>(_onTitleChanged);
     on<ExpenseAmountChanged>(_onAmountChanged);
-    on<ExpenseTypeChanged>(_onTypeChanged);
+    on<ExpenseCategoryChanged>(_onCategoryChanged);
     on<ExpenseDateChanged>(_onDateChanged);
+    on<ExpenseSubmitted>(_onSubmitted);
   }
   final ExpenseRepository _repository;
   void _onTitleChanged(
@@ -27,9 +36,9 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
     emit(state.copyWith(amount: event.amount));
   }
 
-  void _onTypeChanged(
-      ExpenseTypeChanged event, Emitter<ExpenseFormState> emit) {
-    emit(state.copyWith(type: event.type));
+  void _onCategoryChanged(
+      ExpenseCategoryChanged event, Emitter<ExpenseFormState> emit) {
+    emit(state.copyWith(category: event.category));
   }
 
   void _onDateChanged(
@@ -39,12 +48,17 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
 
   Future<void> _onSubmitted(
       ExpenseSubmitted event, Emitter<ExpenseFormState> emit) async {
-    final expense = ExpenseModel(
-        id: const Uuid().v4(),
-        title: state.title,
-        type: state.type,
-        dateTime: state.dateTime,
-        amount: state.amount);
+    final expense = (state.initialExpense)?.copyWith(
+            title: state.title,
+            category: state.category,
+            date: state.dateTime,
+            amount: state.amount) ??
+        ExpenseModel(
+            id: const Uuid().v4(),
+            title: state.title!,
+            category: state.category,
+            date: state.dateTime,
+            amount: state.amount!);
 
     emit(state.copyWith(status: ExpenseFormStatus.loading));
 

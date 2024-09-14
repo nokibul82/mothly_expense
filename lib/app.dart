@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mothly_expense/blocs/expense_list/expense_list_bloc.dart';
 import './pages/home_page.dart';
 import './core/app_theme.dart';
 import './repositories/expense_repository.dart';
@@ -15,9 +16,9 @@ class App extends StatelessWidget {
     return RepositoryProvider.value(
       value: expenseRepository,
       child: BlocProvider(
-        create: (context) => ExpenseFormBloc(
+        create: (context) => ExpenseListBloc(
           repository: expenseRepository,
-        ),
+        )..add(const ExpenseListSubscriptionRequested()),
         child: MaterialApp(
           home: const HomePage(),
           theme: AppTheme.lightAppTheme,

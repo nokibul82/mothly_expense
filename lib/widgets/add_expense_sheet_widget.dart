@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../blocs/expense_form/expense_form_bloc.dart';
+import '../models/category_model.dart';
 
 class AddExpenseSheetWidget extends StatelessWidget {
   const AddExpenseSheetWidget({super.key});
@@ -24,7 +24,7 @@ class AddExpenseSheetWidget extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            TypeFieldWidget(),
+            CategoryFieldWidget(),
             SizedBox(
               height: 15,
             ),
@@ -59,7 +59,7 @@ class AddButtonWidget extends StatelessWidget {
                 Navigator.pop(context);
               },
         child: isLoading
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : Text(
                 "Add",
                 style: textTheme.displayMedium,
@@ -77,7 +77,9 @@ class DateFieldWidget extends StatelessWidget {
     final bloc = context.read<ExpenseFormBloc>();
     final state = context.watch<ExpenseFormBloc>().state;
 
-    final formattedDate = DateFormat("dd/MM/yyyy").format(state.dateTime);
+    final formattedDate = state.initialExpense == null
+        ? DateFormat("dd/MM/yyyy").format(state.dateTime)
+        : DateFormat("dd/MM/yyyy").format(state.initialExpense!.date);
 
     return GestureDetector(
       onTap: () async {
@@ -110,22 +112,44 @@ class DateFieldWidget extends StatelessWidget {
   }
 }
 
-class TypeFieldWidget extends StatelessWidget {
-  const TypeFieldWidget({super.key});
+class CategoryFieldWidget extends StatelessWidget {
+  const CategoryFieldWidget({super.key});
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
+    final bloc = context.read<ExpenseFormBloc>();
     final state = context.watch<ExpenseFormBloc>().state;
 
-    return TextFormField(
-      style: textTheme.displaySmall?.copyWith(fontSize: 20),
-      onChanged: (value) {
-        context.read<ExpenseFormBloc>().add(ExpenseTypeChanged(value));
-      },
-      decoration: InputDecoration(
-          enabled: state.status != ExpenseFormStatus.loading,
-          border: InputBorder.none,
-          hintText: "Type"),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Select Category',
+          style: textTheme.labelLarge?.copyWith(
+            color: colorScheme.onBackground.withOpacity(0.4),
+            height: 1,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 10,
+          runSpacing: 0,
+          children: Category.values
+              .where((category) => category != Category.all)
+              .map((currentCategory) => ChoiceChip(
+                    label: Text(currentCategory.toName),
+                    selected: currentCategory == state.category,
+                    onSelected: (_) => bloc.add(
+                      ExpenseCategoryChanged(currentCategory),
+                    ),
+                  ))
+              .toList(),
+        ),
+      ],
     );
   }
 }
@@ -145,6 +169,7 @@ class AmountFieldWidget extends StatelessWidget {
             .read<ExpenseFormBloc>()
             .add(ExpenseAmountChanged(double.parse(value)));
       },
+      initialValue: state.initialExpense?.amount.toString(),
       decoration: InputDecoration(
           enabled: state.status != ExpenseFormStatus.loading,
           border: InputBorder.none,
@@ -166,6 +191,7 @@ class TitleFieldWidget extends StatelessWidget {
       onChanged: (value) {
         context.read<ExpenseFormBloc>().add(ExpenseTitleChanged(value));
       },
+      initialValue: state.initialExpense?.title,
       decoration: InputDecoration(
           enabled: state.status != ExpenseFormStatus.loading,
           border: InputBorder.none,
