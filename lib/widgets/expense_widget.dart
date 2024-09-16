@@ -16,14 +16,15 @@ class ExpenseWidget extends StatelessWidget {
           return const LoadingWidget(radius: 12, addPadding: true);
         }
 
-        final expenses = state.expenses.toList();
-        if( state.status == ExpenseListStatus.success && expenses.isEmpty){
+        final expenses = state.filteredExpenses.toList();
+        if (state.status == ExpenseListStatus.success && expenses.isEmpty) {
           return const EmptyListWidget();
         }
         return ListView.separated(
-            itemBuilder: (context, index) => ExpenseTileWidget(
-              expense: expenses[index]!
-            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) =>
+                ExpenseTileWidget(expense: expenses[index]!),
             separatorBuilder: (context, index) {
               return const SizedBox(
                 height: 10,
@@ -34,7 +35,6 @@ class ExpenseWidget extends StatelessWidget {
     );
   }
 }
-
 
 class EmptyListWidget extends StatelessWidget {
   const EmptyListWidget({

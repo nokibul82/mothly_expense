@@ -14,7 +14,7 @@ class ExpenseListBloc extends Bloc<ExpenseListEvent, ExpenseListState> {
         super(ExpenseListInitial()) {
     on<ExpenseListSubscriptionRequested>(_onSubscriptionRequested);
     on<ExpenseListExpenseDeleted>(_onExpenseDeleted);
-    on<ExpenseListCategoryFilterChanged>((event, emit) {});
+    on<ExpenseListCategoryFilterChanged>(_onCategoryFilterChanged);
   }
 
   final ExpenseRepository _repository;

@@ -8,7 +8,9 @@ class LocalDataStorage {
   final SharedPreferences _preferences;
 
   LocalDataStorage({required SharedPreferences preferences})
-      : _preferences = preferences;
+      : _preferences = preferences {
+    _initialize();
+  }
   final _controller = BehaviorSubject<List<ExpenseModel?>>.seeded(const []);
   static const expenseCollectionKey = "expense_collection_key";
   void _initialize() {
@@ -27,7 +29,7 @@ class LocalDataStorage {
     final expenses = [..._controller.value];
     final expenseIndex = expenses
         .indexWhere((currentExpense) => currentExpense?.id == expense.id);
-    if (expenseIndex <= 0) {
+    if (expenseIndex >= 0) {
       expenses[expenseIndex] = expense;
     } else {
       expenses.add(expense);

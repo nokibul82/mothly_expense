@@ -67,6 +67,7 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
       emit(state.copyWith(status: ExpenseFormStatus.success));
       emit(ExpenseFormState(dateTime: DateTime.now()));
     } catch (e) {
+      print("Creation failed:$e");
       emit(state.copyWith(status: ExpenseFormStatus.failure));
     }
   }

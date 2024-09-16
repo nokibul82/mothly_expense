@@ -13,6 +13,8 @@ final class ExpenseListState extends Equatable {
   final double totalExpense;
   final Category filter;
 
+  Iterable<ExpenseModel?> get filteredExpenses => filter.applyAll(expenses);
+
   ExpenseListState copyWith(
       {ExpenseListStatus Function()? status,
       List<ExpenseModel?> Function()? expenses,

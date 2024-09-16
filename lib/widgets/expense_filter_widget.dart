@@ -10,6 +10,7 @@ class ExpenseFilterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     const categories = Category.values;
 
+
     final activeFiler = context.select(
       (ExpenseListBloc bloc) => bloc.state.filter,
     );
