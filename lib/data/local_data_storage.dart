@@ -42,10 +42,13 @@ class LocalDataStorage {
     final expenses = [..._controller.value];
     final expenseIndex =
         expenses.indexWhere((currentExpense) => currentExpense?.id == id);
+    print("expenseIndex: $expenseIndex");
     if (expenseIndex == -1) {
       throw Exception("No expense found");
     } else {
       expenses.removeAt(expenseIndex);
+      _controller.add(expenses);
+      _preferences.setString(expenseCollectionKey, jsonEncode(expenses));
     }
   }
 

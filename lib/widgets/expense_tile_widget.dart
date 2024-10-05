@@ -42,9 +42,6 @@ class ExpenseTileWidget extends StatelessWidget {
                 CupertinoActionSheetAction(
                     isDestructiveAction: true,
                     onPressed: () {
-                      context
-                          .read<ExpenseListBloc>()
-                          .add(ExpenseListExpenseDeleted(expenseModel: expense));
                       Navigator.of(context).pop(true);
                       },
                     child: const Text("DELETE")
@@ -58,11 +55,11 @@ class ExpenseTileWidget extends StatelessWidget {
           },
         );
       },
-      // onDismissed: (direction) {
-      //   context
-      //       .read<ExpenseListBloc>()
-      //       .add(ExpenseListExpenseDeleted(expenseModel: expense));
-      // },
+      onDismissed: (direction) {
+        context
+            .read<ExpenseListBloc>()
+            .add(ExpenseListExpenseDeleted(expenseModel: expense));
+      },
       child: ListTile(
         onTap: () => context.showAddExpenseSheet(expense: expense),
         leading: Icon(Icons.car_repair, color: colorScheme.surfaceTint),

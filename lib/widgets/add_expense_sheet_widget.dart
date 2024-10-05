@@ -62,7 +62,8 @@ class AddButtonWidget extends StatelessWidget {
             ? const CircularProgressIndicator()
             : Text(
                 "Add",
-                style: textTheme.displayMedium,
+                style: textTheme.titleLarge
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
               ));
   }
 }
@@ -165,9 +166,7 @@ class AmountFieldWidget extends StatelessWidget {
       keyboardType: TextInputType.number,
       style: textTheme.displaySmall?.copyWith(fontSize: 20),
       onChanged: (value) {
-        context
-            .read<ExpenseFormBloc>()
-            .add(ExpenseAmountChanged(value));
+        context.read<ExpenseFormBloc>().add(ExpenseAmountChanged(value));
       },
       initialValue: state.initialExpense?.amount.toString(),
       decoration: InputDecoration(
