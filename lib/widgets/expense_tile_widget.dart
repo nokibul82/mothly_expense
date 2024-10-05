@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,11 +31,38 @@ class ExpenseTileWidget extends StatelessWidget {
         color: colorScheme.error,
         child: Icon(Icons.delete, color: colorScheme.onError),
       ),
-      onDismissed: (direction) {
-        context
-            .read<ExpenseListBloc>()
-            .add(ExpenseListExpenseDeleted(expenseModel: expense));
+      confirmDismiss: (DismissDirection direction) async {
+        return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoActionSheet(
+              title: const Text("Confirm"),
+              message: const Text("Are you sure you wish to delete this item?"),
+              actions: <CupertinoActionSheetAction>[
+                CupertinoActionSheetAction(
+                    isDestructiveAction: true,
+                    onPressed: () {
+                      context
+                          .read<ExpenseListBloc>()
+                          .add(ExpenseListExpenseDeleted(expenseModel: expense));
+                      Navigator.of(context).pop(true);
+                      },
+                    child: const Text("DELETE")
+                ),
+                CupertinoActionSheetAction(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("CANCEL"),
+                ),
+              ],
+            );
+          },
+        );
       },
+      // onDismissed: (direction) {
+      //   context
+      //       .read<ExpenseListBloc>()
+      //       .add(ExpenseListExpenseDeleted(expenseModel: expense));
+      // },
       child: ListTile(
         onTap: () => context.showAddExpenseSheet(expense: expense),
         leading: Icon(Icons.car_repair, color: colorScheme.surfaceTint),
