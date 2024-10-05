@@ -17,7 +17,7 @@ final class ExpenseTitleChanged extends ExpenseFormEvent{
 
 final class ExpenseAmountChanged extends ExpenseFormEvent{
   const ExpenseAmountChanged(this.amount);
-  final double amount;
+  final String amount;
 
   @override
   List<Object> get props => [amount];

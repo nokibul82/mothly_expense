@@ -33,7 +33,8 @@ class ExpenseFormBloc extends Bloc<ExpenseFormEvent, ExpenseFormState> {
 
   void _onAmountChanged(
       ExpenseAmountChanged event, Emitter<ExpenseFormState> emit) {
-    emit(state.copyWith(amount: event.amount));
+    final amount = double.parse(event.amount);
+    emit(state.copyWith(amount: amount));
   }
 
   void _onCategoryChanged(

@@ -167,7 +167,7 @@ class AmountFieldWidget extends StatelessWidget {
       onChanged: (value) {
         context
             .read<ExpenseFormBloc>()
-            .add(ExpenseAmountChanged(double.parse(value)));
+            .add(ExpenseAmountChanged(value));
       },
       initialValue: state.initialExpense?.amount.toString(),
       decoration: InputDecoration(
